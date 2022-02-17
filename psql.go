@@ -11,7 +11,7 @@ import (
 )
 
 func psql() *sql.DB {
-	connStr := "user=qwerty password=1234 dbname=sales sslmode=disable"
+	connStr := "user=artem password=1 dbname=sales sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		//log.Fatal(err) //psql err
@@ -21,7 +21,7 @@ func psql() *sql.DB {
 func addPsql(mas data) {
 	db := psql()
 	defer db.Close()
-	_, err := db.Exec("insert into sales (id, model, price) values ($1, $2, $3)", mas.id, mas.name, mas.price)
+	_, err := db.Exec("insert into sales (model, price) values ($1, $2,)", mas.name, mas.price)
 	if err != nil {
 		//log.Fatal(err) //add psql err
 	}
@@ -44,7 +44,7 @@ func Data() (mas []data) {
 func Table(mas []data) (table []data) {
 	for i := 1; i <= 10; i++ {
 		t := mas[rand.Intn(len(mas))]
-		t.id = i
+		//t.id = i
 		//fmt.Println("t.id=", t)
 		table = append(table, t)
 	}
@@ -62,7 +62,7 @@ func gorun() (p data) {
 }
 func main() {
 	http.HandleFunc("/", add)
-	err := http.ListenAndServe("localhost:8000", nil)
+	err := http.ListenAndServe("localhost:80", nil)
 	if err != nil {
 		log.Fatal(err) //http error
 	}

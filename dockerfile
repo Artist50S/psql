@@ -5,5 +5,6 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 COPY *.go ./
 RUN go build -o /app
-EXPOSE 8000
+EXPOSE 80 800
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:800 || exit 1
 CMD [ "/app" ]
