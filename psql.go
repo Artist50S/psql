@@ -14,7 +14,7 @@ func psql() *sql.DB {
 	connStr := "user=artem password=1 dbname=sales sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		//log.Fatal(err) //psql err
+		fmt.Println(err) //psql err
 	}
 	return db
 }
@@ -23,12 +23,12 @@ func addPsql(mas data) {
 	defer db.Close()
 	_, err := db.Exec("insert into sales (model, price) values ($1, $2,)", mas.name, mas.price)
 	if err != nil {
-		//log.Fatal(err) //add psql err
+		fmt.Println(err) //add psql err
 	}
 }
 
 type data struct {
-	id    int
+	//id    int
 	name  string
 	price int
 }
