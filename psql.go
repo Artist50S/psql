@@ -11,7 +11,8 @@ import (
 )
 
 func psql() *sql.DB {
-	connStr := "user=artem password=1 dbname=sales sslmode=disable"
+//	connStr := "postgres://artem:1@172.18.0.1:5432/sales?sslmode=disable"
+connStr := "user=artem password=1 dbname=sales sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Println(err) //psql err
@@ -21,7 +22,7 @@ func psql() *sql.DB {
 func addPsql(mas data) {
 	db := psql()
 	defer db.Close()
-	_, err := db.Exec("insert into sales (model, price) values ($1, $2,)", mas.name, mas.price)
+	_, err := db.Exec("insert into sales (model, price) values ($1, $2)", mas.name, mas.price)
 	if err != nil {
 		fmt.Println(err) //add psql err
 	}
@@ -62,7 +63,7 @@ func gorun() (p data) {
 }
 func main() {
 	http.HandleFunc("/", add)
-	err := http.ListenAndServe("localhost:80", nil)
+	err := http.ListenAndServe(":9990", nil)
 	if err != nil {
 		log.Fatal(err) //http error
 	}
@@ -70,7 +71,7 @@ func main() {
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
-	gorun()
-	fmt.Fprintf(w, "Привет!")
-	fmt.Println("hello, world")
+	p := gorun()
+	fmt.Fprintf(w, "writed to sales")
+	fmt.Println(p)
 }
